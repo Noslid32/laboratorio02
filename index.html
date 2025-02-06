@@ -13,41 +13,39 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-
-    <!-- Librería Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="container mt-5">
-      <h1 class="text-center fa-solid fa-umbrella">Comparador de Clima</h1>
+      <h1 class="text-center">
+        <i class="fa-solid fa-umbrella"></i> Comparador de Clima
+      </h1>
 
-      <!-- Formulario  -->
       <form id="weatherForm" class="d-flex justify-content-center my-4">
         <input
           type="text"
           id="cityInput"
-          class="form-control w-50"
-          placeholder="Ejemplo: Guatemala, Mexico, Panama"
+          class="form-control w-50 text-center"
+          placeholder="Ejemplo: Guatemala, México, Panamá"
         />
-        <button type="submit" class="btn btn-primary ms-2">Comparar</button>
+        <button
+          id="compareButton"
+          type="button"
+          class="btn btn-primary btn-lg btn-block"
+        >
+          <i class="fas fa-search"></i> Comparar
+        </button>
       </form>
 
-      <!-- Contenedor para mostrar mensajes de error -->
       <div
         id="errorMessage"
         class="alert alert-danger d-none text-center"
       ></div>
-
-      <!-- Contenedor para mostrar las tarjetas del clima -->
       <div id="weatherCards" class="row"></div>
-
-      <!-- Contenedor del gráfico -->
       <canvas id="temperatureChart"></canvas>
     </div>
 
-    <!-- Bootstrap JS y tu script personalizado -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-    <!-- Tu script en JavaScript -->
+    <script src="index.js"></script>
   </body>
 </html>
