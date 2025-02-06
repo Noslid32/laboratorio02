@@ -5,11 +5,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
-weather-card {
+
+.weather-card {
   background: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px; /* Agrega espacio entre las tarjetas */
+  padding: 15px;
 }
 
 .form-control {
@@ -42,4 +46,13 @@ weather-card {
 
 .result-card p {
   color: #555;
+}
+#compareButton {
+  background-color: #1a45d2;
+  border-color: #e9d9d6;
+}
+
+#compareButton:hover {
+  background-color: #1c498c;
+  border-color: #234573;
 }

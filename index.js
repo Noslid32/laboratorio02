@@ -6,39 +6,38 @@ const errorMessage = document.getElementById("errorMessage");
 const compareButton = document.getElementById("compareButton");
 
 compareButton.addEventListener("click", () => {
-  const cities = cityInput.value.split(",").map((city) => city.trim()); // Divide las ciudades
-  if (cities.length === 0 || cities[0] === "") {
+  const cities = cityInput.value
+    .split(",")
+    .map((city) => city.trim())
+    .filter((city) => city !== "");
+  if (cities.length === 0) {
     showError("Por favor, ingresa al menos una ciudad");
     return;
   }
 
-  weatherCards.innerHTML = ""; // Limpia los resultados previos
-  errorMessage.classList.add("d-none"); // Oculta errores previos
+  weatherCards.innerHTML = "";
+  errorMessage.classList.add("d-none");
 
-  // Realiza todas las consultas en paralelo
-  Promise.all(cities.map((city) => getWeatherData(city)))
-    .then((results) => results.forEach(Datos)) // Muestra cada resultado en tarjetas
-    .catch(showError); // Muestra error si una ciudad falla
+  const weatherPromises = cities.map((city) =>
+    getWeatherData(city)
+      .then(Datos)
+      .catch((error) => showError(error))
+  );
+
+  Promise.allSettled(weatherPromises);
 });
 
 function getWeatherData(city) {
-  return new Promise((resolve, reject) => {
-    const url = `${link}?q=${encodeURIComponent(
-      city
-    )}&units=metric&appid=${api}`;
-    fetch(url)
-      .then((response) =>
-        response.ok
-          ? response.json()
-          : Promise.reject(`Ciudad "${city}" no encontrada`)
-      )
-      .then(resolve)
-      .catch(reject);
+  return fetch(
+    `${link}?q=${encodeURIComponent(city)}&units=metric&appid=${api}`
+  ).then((response) => {
+    if (!response.ok) throw `Ciudad "${city}" no encontrada`;
+    return response.json();
   });
 }
 
 function showError(message) {
-  errorMessage.textContent = `Error: ${message}`;
+  errorMessage.innerHTML += `<p>Error: ${message}</p>`;
   errorMessage.classList.remove("d-none");
 }
 
@@ -46,14 +45,14 @@ function Datos(data) {
   const card = document.createElement("div");
   card.className = "col-md-4";
   card.innerHTML = `
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title">${data.name}, ${data.sys.country}</h5>
-          <p class="card-text">Temperatura: ${data.main.temp} °C</p>
-          <p class="card-text">Clima: ${data.weather[0].description}</p>
-          <p class="card-text">Humedad: ${data.main.humidity}%</p>
-        </div>
+    <div class="card weather-card">
+      <div class="card-body text-center">
+        <h5 class="card-title">${data.name}, ${data.sys.country} <i class="fas fa-map-marker-alt text-info"></i></h5>
+        <p class="card-text"><i class="fas fa-temperature-high text-danger"></i> Temperatura: ${data.main.temp} °C</p>
+        <p class="card-text"><i class="fas fa-cloud text-primary"></i>Clima: ${data.weather[0].description}</p>
+        <p class="card-text"><i class="fas fa-tint text-info"></i>Humedad: ${data.main.humidity}%</p>
       </div>
-    `;
+    </div>
+  `;
   weatherCards.appendChild(card);
 }
