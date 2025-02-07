@@ -4,12 +4,18 @@ const cityInput = document.getElementById("cityInput");
 const weatherCards = document.getElementById("weatherCards");
 const errorMessage = document.getElementById("errorMessage");
 const compareButton = document.getElementById("compareButton");
+const temperatureChartCtx = document
+  .getElementById("temperatureChart")
+  .getContext("2d");
+
+let temperatureChart = null;
 
 compareButton.addEventListener("click", () => {
   const cities = cityInput.value
     .split(",")
     .map((city) => city.trim())
     .filter((city) => city !== "");
+
   if (cities.length === 0) {
     showError("Por favor, ingresa al menos una ciudad");
     return;
@@ -19,12 +25,23 @@ compareButton.addEventListener("click", () => {
   errorMessage.classList.add("d-none");
 
   const weatherPromises = cities.map((city) =>
-    getWeatherData(city)
-      .then(Datos)
-      .catch((error) => showError(error))
+    getWeatherData(city).catch((error) => {
+      showError(error);
+      return null;
+    })
   );
 
-  Promise.allSettled(weatherPromises);
+  Promise.all(weatherPromises).then((results) => {
+    const validResults = results.filter((data) => data !== null);
+
+    if (validResults.length > 0) {
+      validResults.forEach((data) => Datos(data));
+      updateChart(
+        validResults.map((data) => data.name),
+        validResults.map((data) => data.main.temp)
+      );
+    }
+  });
 });
 
 function getWeatherData(city) {
@@ -37,7 +54,7 @@ function getWeatherData(city) {
 }
 
 function showError(message) {
-  errorMessage.innerHTML += `<p>Error: ${message}</p>`;
+  errorMessage.innerHTML = `<p>Error: ${message}</p>`;
   errorMessage.classList.remove("d-none");
 }
 
@@ -55,4 +72,82 @@ function Datos(data) {
     </div>
   `;
   weatherCards.appendChild(card);
+}
+
+// Función para actualizar las Graficas
+function updateChart(cities, temperatures) {
+  console.log("Actualizando gráfico con datos:", cities, temperatures);
+
+  if (temperatureChart) temperatureChart.destroy();
+
+  temperatureChart = new Chart(temperatureChartCtx, {
+    type: "bar",
+    data: {
+      labels: cities,
+      datasets: [
+        {
+          label: "Temperatura (°C)",
+          data: temperatures,
+          backgroundColor: [
+            "rgb(255, 140, 0)",
+            "rgb(255, 215, 0)",
+            "rgb(64, 224, 208)",
+            "rgb(0, 102, 204)",
+            "rgb(122, 233, 66 )",
+            "rgb(230, 230, 250)",
+          ],
+          borderColor: [
+            "rgb(255, 140, 0)",
+            "rgb(255, 215, 0)",
+            "rgb(64, 224, 208)",
+            "rgb(0, 102, 204)",
+            "rgb(122, 233, 66 )",
+            "rgb(230, 230, 250)",
+          ],
+          borderWidth: 3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: "black",
+            font: {
+              size: 14,
+              weight: "bold",
+            },
+          },
+        },
+        title: {
+          display: true,
+          text: "Comparación de Temperaturas",
+          color: "black",
+          font: {
+            size: 16,
+            weight: "bold",
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: "black",
+            font: {
+              size: 16,
+            },
+          },
+        },
+        y: {
+          ticks: {
+            color: "black",
+            font: {
+              size: 16,
+            },
+          },
+        },
+      },
+    },
+  });
 }

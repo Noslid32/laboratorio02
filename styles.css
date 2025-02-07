@@ -12,8 +12,17 @@ body {
   background: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px; /* Agrega espacio entre las tarjetas */
+  margin-bottom: 20px;
   padding: 15px;
+}
+
+#temperatureChart {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  background: linear-gradient(135deg, #3d7eaa, #69c7f0);
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .form-control {
@@ -32,21 +41,6 @@ body {
   font-weight: bold;
 }
 
-.result-card {
-  margin-top: 20px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.result-card h5 {
-  font-weight: bold;
-  color: #333;
-}
-
-.result-card p {
-  color: #555;
-}
 #compareButton {
   background-color: #1a45d2;
   border-color: #e9d9d6;
