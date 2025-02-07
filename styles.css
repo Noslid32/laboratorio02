@@ -23,6 +23,8 @@ body {
   background: linear-gradient(135deg, #3d7eaa, #69c7f0);
   border-radius: 12px;
   padding: 10px;
+  margin: 0 auto;
+  display: block;
 }
 
 .form-control {
